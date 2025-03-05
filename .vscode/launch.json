@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "home_automation",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--web-port",
+                "5000"
+            ]
+        },
+        {
+            "name": "home_automation (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "home_automation (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
