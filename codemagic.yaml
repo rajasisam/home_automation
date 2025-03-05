@@ -4,30 +4,15 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.example.home-automation
       vars:
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"
         BUNDLE_ID: "com.example.home-automation"
-        # Add Firebase configuration
-        FIREBASE_IOS_CONFIG: Encrypted() # You'll add this in Codemagic UI
+        FIREBASE_IOS_CONFIG: Encrypted()
       flutter: stable
       xcode: latest
       cocoapods: default
-    triggering:
-      events:
-        - push
-        - pull_request
-      branch_patterns:
-        - pattern: main
-          include: true
     scripts:
-      - name: Set up code signing settings
-        script: |
-          echo "Setting up code signing"
-          keychain initialize
       - name: Get Flutter packages
         script: |
           flutter packages pub get
@@ -40,19 +25,10 @@ workflows:
       - name: Flutter build ipa
         script: |
           flutter build ios --release --no-codesign
-          cd ios
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release -archivePath Runner.xcarchive archive
-          xcodebuild -exportArchive -archivePath Runner.xcarchive -exportOptionsPlist exportOptions.plist -exportPath ./build
     artifacts:
       - build/ios/iphoneos/Runner.app
-      - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
     publishing:
       email:
         recipients:
           - rajasisamanta77.pkt@gmail.com
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY # You'll add this in Codemagic UI
-        key_id: $APP_STORE_CONNECT_KEY_ID       # You'll add this in Codemagic UI
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID # You'll add this in Codemagic UI
